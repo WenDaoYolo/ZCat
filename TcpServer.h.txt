@@ -1,0 +1,32 @@
+#define CS_EVENTS_LEN 1024 
+#define ADMIN_MAX_LEN 15
+#define PASSWD_MAX_LEN 15
+#define NAME_MAX_LEN 10
+#include<sys/socket.h>
+#include<netinet/in.h>
+#include<sys/epoll.h>
+#include<netinet/tcp.h>
+//#include<pqxx/pqxx>
+#include<signal.h>
+#include<iostream>
+#include<unistd.h>
+#include<fcntl.h>
+#pragma once
+
+class TcpServer
+{
+    private:
+        bool stop;
+        int epolls;
+        int listen_fd;
+        sockaddr_in my_sa;
+        epoll_event c_events[CS_EVENTS_LEN];
+    public:
+        TcpServer(int port,int listen_len);
+        ~TcpServer();
+
+        void SetNonBlocking(int fd);
+        void DisableNagle(int fd);              //just for query,must not really disable
+        void SetNonSignal();
+        void StartUp();
+};
