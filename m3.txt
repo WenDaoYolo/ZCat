@@ -1,0 +1,21 @@
+	user_info** blocks=new user_info*[size];
+        for(int i=0;i<size;i++)
+        {
+            blocks[i]=(user_info*)user_info_pool.allocate_block();
+        }
+
+        ec1=GetApplyBufferModule(blocks,oci[fd].admin);
+
+        send(fd,&ec1,sizeof(ec1),MSG_DONTWAIT); //
+        send(fd,&size,sizeof(size),MSG_DONTWAIT);//
+
+        for(int i=0;i<size;i++)
+        {
+            send(fd,blocks[i],sizeof(user_info),MSG_DONTWAIT);
+        }
+
+        for(int i=0;i<size;i++)
+        {
+            user_info_pool.deallocate_block(blocks[i]);
+        }
+        delete[] blocks;
