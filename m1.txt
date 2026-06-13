@@ -1,0 +1,35 @@
+#include<iostream>
+#include<iomanip>
+#include<cstring>
+#define DEFAULT_BLOCKS 4096
+#define INFO_HEAD 20
+#define INFO_DATA 15
+#define INFO_RESERVE 5
+#define INFO_TOTAL INFO_HEAD+INFO_DATA+INFO_RESERVE
+
+struct Node                   //指针结构
+{
+    Node* next;
+};
+
+class FixedSizePool
+{
+    private:
+        size_t page_size;
+        size_t pages;
+        size_t block_size;
+        size_t blocks;
+        Node* page_list;      //页表(首块存指针结构)
+        Node* block_list;     //空闲链表(空间为多用)
+
+    public:
+        FixedSizePool(size_t block_size,size_t blocks=DEFAULT_BLOCKS);
+        ~FixedSizePool();
+        void allocate_page();
+
+        size_t GetBlocks() const;
+        size_t GetPages() const;
+        void* allocate_block();
+        void deallocate_block(void* block);
+        void PoolInformaton();
+};
