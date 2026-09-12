@@ -1,4 +1,4 @@
-#include "DataAnalysis.h"
+#include "../include/DataAnalysis.h"
 
 
 void GetDataRule(data_rule& dr)

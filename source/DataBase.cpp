@@ -1,4 +1,4 @@
-#include "DataBase.h"
+#include "../include/DataBase.h"
 
 DataBase::DataBase(const std::string& connect_str):c1(connect_str)
 {
