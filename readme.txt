@@ -1,0 +1,30 @@
+1.安装数据库
+sudo apt install -y libpqxx-dev postgresql postgresql-contrib
+
+2.终端连接数据库
+sudo -u postgres psql
+
+3.以本地用户的身份首次进入数据库设置密码
+alter user postgres with encrypted password '设置的密码';
+
+
+4.配置远程可连接的ip、数据库的端口等信息
+/etc/postgresql/向下查找../main/postgresql.conf
+
+listen_address='*'                           	      设置任何ip都可以连接数据库
+port = xxx           		                              设置使用的端口号
+max_connections = xxx                            设置数据库系统的最大连接数
+                                                                      若被#注释则需取消注释以启用
+
+
+5.设置客户端的身份认证
+/etc/postgresql/*/main/pg_hba.conf
+末尾追加：host all all 0.0.0.0/0 md5         所有的主机均可进行认证
+
+
+6.重启数据库并查看状态
+sudo systemctl restart postgresql
+sudo systemctl status postgresql 
+
+7.安装lib-pqxx开发库
+  sudo apt install -y libpqxx-dev
