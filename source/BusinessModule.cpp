@@ -19,7 +19,7 @@ bool CheckValidData(const char* str)    //check format and character code
 error_code RegistModule(user_info& u1,online_client_info& o1)
 {   
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
 
     if(!CheckValidData(u1.admin))
     {
@@ -52,7 +52,7 @@ error_code RegistModule(user_info& u1,online_client_info& o1)
 error_code LoginModule(user_info& u1,online_client_info& o1,int isonline)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     user_info user1;
 
     if(!CheckValidData(u1.admin))
@@ -104,7 +104,7 @@ error_code LoginModule(user_info& u1,online_client_info& o1,int isonline)
 error_code ApplyModule(int source_id,user_info& u1)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     user_info user1;
 
     if(!CheckValidData(u1.admin))
@@ -138,7 +138,7 @@ error_code ApplyModule(int source_id,user_info& u1)
 int GetApplyBuffer_len(const char* admin)
 {
     user_info temp;
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.FindUser(admin,&temp);
     return db1.SearchApplyBuffer(temp.id);
 }
@@ -148,7 +148,7 @@ error_code GetApplyBufferModule(user_info** ptr,const char* admin)
     error_code ec={0};
 
     user_info temp;
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.FindUser(admin,&temp);
     user_info** find=ptr;
     db1.DownLoadApplyBuffer(find,temp.id);
@@ -159,7 +159,7 @@ error_code GetApplyBufferModule(user_info** ptr,const char* admin)
 int GetFriendBuffer_len(const char* admin)
 {
     user_info temp;
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.FindUser(admin,&temp);
     return db1.SearchFriendBuffer(temp.id);
 }
@@ -169,7 +169,7 @@ error_code GetFriendBufferModule(user_info** ptr,const char* admin)
     error_code ec={0};
 
     user_info temp;
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.FindUser(admin,&temp);
     user_info** find=ptr;
     db1.DownLoadFriendBuffer(find,temp.id);
@@ -179,14 +179,14 @@ error_code GetFriendBufferModule(user_info** ptr,const char* admin)
 
 int GetUnicastMsgBuffer_len(int des_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     return db1.SearchUnicastMsgBuffer(des_id);;
 }
 
 error_code GetUnicastMsgBufferModule(unicast_msg** ptr,int id)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     unicast_msg** find=ptr;
     db1.DownLoadUnicastMsgBuffer(find,id);
     return ec;
@@ -194,14 +194,14 @@ error_code GetUnicastMsgBufferModule(unicast_msg** ptr,int id)
 
 int GetMulticastMsgBuffer_len(int group_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     return db1.SearchMulticastMsgBuffer(group_id);;
 }
 
 error_code GetMulticastMsgBufferModule(multicast_msg** ptr,int group_id)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     multicast_msg** find=ptr;
     db1.DownLoadMulticastMsgBuffer(find,group_id);
     return ec;
@@ -209,14 +209,14 @@ error_code GetMulticastMsgBufferModule(multicast_msg** ptr,int group_id)
 
 int GetGroupBuffer_len(int id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     return db1.SearchGroupBuffer(id);
 }
 
 error_code GetGroupBufferModule(group_info** ptr,int id)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     group_info** find=ptr;
     db1.DownLoadGroupBuffer(find,id);
     return ec;
@@ -224,14 +224,14 @@ error_code GetGroupBufferModule(group_info** ptr,int id)
 
 int GetGroupApplyBuffer_len(int m_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     return db1.SearchGroupApplyBuffer(m_id);
 }
 
 error_code GetGroupApplyBufferModule(ug_info** ptr,int m_d)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     ug_info** find=ptr;
     db1.DownLoadGroupApplyBuffer(find,m_d);
     return ec;
@@ -239,14 +239,14 @@ error_code GetGroupApplyBufferModule(ug_info** ptr,int m_d)
 
 int GetGroupMembers_len(int group_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     return db1.SearchGroupMembers(group_id);
 }
 
 error_code ViewGroupMembersModule(user_info** ptr,int group_id)
 {
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
     user_info** find=ptr;
     db1.DownLoadGroupMembers(find,group_id);
     return ec;
@@ -254,7 +254,7 @@ error_code ViewGroupMembersModule(user_info** ptr,int group_id)
 
 error_code PermitApplyModule(int sou_id,int des_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     error_code ec={9};
     
     db1.RemoveApply(sou_id,des_id);
@@ -271,31 +271,31 @@ error_code PermitApplyModule(int sou_id,int des_id)
 
 void RefuseApplyModule(int sou_id,int des_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.RemoveApply(sou_id,des_id);
 }
 
 void DeleteFriendModule(int sou_id,int des_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.DeleteFriend(sou_id,des_id);
 }
 
 void UnicastMsgModule(unicast_msg& um1)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.InsertUnicastMsg(&um1);
 }
 
 void MulticastMsgModule(multicast_msg& mm1)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.InsertMulticastMsg(&mm1);
 }
 
 error_code CreateGroupModule(group_info& gi1)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     error_code ec={0};
 
     if(!CheckValidData(gi1.admin))
@@ -324,7 +324,7 @@ error_code CreateGroupModule(group_info& gi1)
 
 error_code GroupApplyModule(int source_id,group_info& gi1)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     error_code ec={0};
 
     if(!CheckValidData(gi1.admin))
@@ -355,7 +355,7 @@ error_code GroupApplyModule(int source_id,group_info& gi1)
 
 error_code PermitGroupApplyModule(ug_info& ug)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     error_code ec={11};
     db1.RemoveGroupApply(ug.ui.id,ug.gi.id,ug.gi.manager_id);
 
@@ -370,31 +370,31 @@ error_code PermitGroupApplyModule(ug_info& ug)
 
 void RefuseGroupApplyModule(ug_info& ug)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.RemoveGroupApply(ug.ui.id,ug.gi.id,ug.gi.manager_id);
 }
 
 void ExitGroupModule(ug_info& ug)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.RemoveGroupMember(ug.ui.id,ug.gi.id,ug.gi.manager_id);
 }
 
 void RemoveGroupMemberModule(ug_info& ug)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     db1.RemoveGroupMember(ug.ui.id,ug.gi.id,ug.gi.manager_id);
 }
 
 int GetGroupMemberNumModule(int group_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     return db1.FindGroupMemberNum(group_id);
 }   
 
 void GetGroupMemberIDModule(int* ptr,int group_id)
 {
-    DataBase db1(DEF_STR);
+    DataBase db1;
     int* find=ptr;
     db1.GetGroupMemberID(ptr,group_id);
 }
@@ -402,7 +402,7 @@ void GetGroupMemberIDModule(int* ptr,int group_id)
 error_code UpdatePasswdModule(user_info& u1,online_client_info& o1)
 {   
     error_code ec={0};
-    DataBase db1(DEF_STR);
+    DataBase db1;
 
     if(!CheckValidData(u1.password))
     {

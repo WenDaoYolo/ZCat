@@ -1,14 +1,25 @@
 #include "../include/DataBase.h"
 
-DataBase::DataBase(const std::string& connect_str):c1(connect_str)
+DataBase::DataBase()
 {
-    if(!c1.is_open())
+    std::fstream f1;
+    char db_config_str[128]={0};
+    f1.open("./CONFIG.txt",std::ios::in);
+    
+    if(f1.is_open())
+    {
+        f1.getline(db_config_str,128,'\n');
+        f1.close();
+    }
+    this->c1=new pqxx::connection(db_config_str);
+
+    if(!c1->is_open())
         std::cout<<"database connect error"<<std::endl;
 }
 
 bool DataBase::FindUser(const std::string& admin,user_info* u_info)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from user_info where admin=$1",admin);
     if(!r1.empty())
     {
@@ -27,7 +38,7 @@ bool DataBase::FindUser(const std::string& admin,user_info* u_info)
 
 void DataBase::InsertUser(const char* admin,const char* passwd,const char* name)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec("select max(id) from user_info");
 
     int id=1;
@@ -45,7 +56,7 @@ void DataBase::InsertUser(const char* admin,const char* passwd,const char* name)
 
 void DataBase::InsertLog(const char* ip,const char* admin,const char* active)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec("select max(id) from active_log");
 
     int id=1;
@@ -62,7 +73,7 @@ void DataBase::InsertLog(const char* ip,const char* admin,const char* active)
 
 bool DataBase::InsertApply(int sou_id,int des_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from apply_buffer where sou_id=$1 and des_id=$2",
@@ -79,7 +90,7 @@ bool DataBase::InsertApply(int sou_id,int des_id)
 
 bool DataBase::InsertGroupApply(int sou_id,int group_id,int manager_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from group_apply_buffer where sou_id=$1 and group_id=$2",
@@ -99,7 +110,7 @@ bool DataBase::InsertGroupApply(int sou_id,int group_id,int manager_id)
 
 void DataBase::InsertGroupMember(int sou_id,int group_id,int manager_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "insert into group_buffer (member_id,group_id,manager_id) values($1,$2,$3)",
@@ -110,14 +121,14 @@ void DataBase::InsertGroupMember(int sou_id,int group_id,int manager_id)
 
 void DataBase::RemoveApply(int sou_id,int des_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params("delete from apply_buffer where sou_id=$1 and des_id=$2",sou_id,des_id);
     w1.commit();
 }   
 
 void DataBase::RemoveGroupApply(int sou_id,int group_id,int manager_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params
     (
         "delete from group_apply_buffer where sou_id=$1 and group_id=$2 and manager_id=$3",
@@ -128,7 +139,7 @@ void DataBase::RemoveGroupApply(int sou_id,int group_id,int manager_id)
 
 int DataBase::SearchApplyBuffer(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select sou_id,admin,name from user_info,apply_buffer where sou_id=id and des_id=$1",
@@ -139,7 +150,7 @@ int DataBase::SearchApplyBuffer(int id)
 
 void DataBase::DownLoadApplyBuffer(user_info** ptr,int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select sou_id,admin,name from user_info,apply_buffer where sou_id=id and des_id=$1",
@@ -157,7 +168,7 @@ void DataBase::DownLoadApplyBuffer(user_info** ptr,int id)
 
 int DataBase::SearchFriendBuffer(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from friend_buffer where sou_id=$1 or des_id=$1",
@@ -168,7 +179,7 @@ int DataBase::SearchFriendBuffer(int id)
 
 void DataBase::DownLoadFriendBuffer(user_info** ptr,int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select sou_id,admin,name from user_info,friend_buffer where"
@@ -189,7 +200,7 @@ void DataBase::DownLoadFriendBuffer(user_info** ptr,int id)
 
 int DataBase::SearchUnicastMsgBuffer(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from unicast_msg_buffer where sou_id=$1 or des_id=$1",
@@ -200,7 +211,7 @@ int DataBase::SearchUnicastMsgBuffer(int id)
 
 void DataBase::DownLoadUnicastMsgBuffer(unicast_msg** ptr,int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from unicast_msg_buffer where sou_id=$1 or des_id=$1",
@@ -220,7 +231,7 @@ void DataBase::DownLoadUnicastMsgBuffer(unicast_msg** ptr,int id)
 
 int DataBase::SearchMulticastMsgBuffer(int group_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from multicast_msg_buffer where group_id=$1",
@@ -231,7 +242,7 @@ int DataBase::SearchMulticastMsgBuffer(int group_id)
 
 void DataBase::DownLoadMulticastMsgBuffer(multicast_msg** ptr,int group_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from multicast_msg_buffer where group_id=$1",
@@ -252,7 +263,7 @@ void DataBase::DownLoadMulticastMsgBuffer(multicast_msg** ptr,int group_id)
 
 int DataBase::SearchGroupBuffer(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from group_buffer where member_id=$1",
@@ -263,7 +274,7 @@ int DataBase::SearchGroupBuffer(int id)
 
 void DataBase::DownLoadGroupBuffer(group_info** ptr,int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select name,admin,group_info.manager_id,id from group_info,group_buffer "
@@ -283,14 +294,14 @@ void DataBase::DownLoadGroupBuffer(group_info** ptr,int id)
 
 int DataBase::SearchGroupApplyBuffer(int m_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from group_apply_buffer where manager_id=$1",m_id);
     return r1.size();
 }
 
 void DataBase::DownLoadGroupApplyBuffer(ug_info** ptr,int m_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select ui.id as uid,ui.admin as uad,ui.name as uname,"
@@ -316,14 +327,14 @@ void DataBase::DownLoadGroupApplyBuffer(ug_info** ptr,int m_id)
 
 int DataBase::SearchGroupMembers(int group_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from group_buffer where group_id=$1",group_id);
     return r1.size();
 }
 
 void DataBase::DownLoadGroupMembers(user_info** ptr,int group_id)
 {   
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select ui.id,ui.admin,ui.name from user_info as ui,group_buffer as gb "
@@ -342,7 +353,7 @@ void DataBase::DownLoadGroupMembers(user_info** ptr,int group_id)
 
 bool DataBase::FindFriend(int sou_id,int des_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from friend_buffer where (sou_id=$1 and des_id=$2) or (sou_id=$3 and des_id=$4)",
@@ -359,14 +370,14 @@ bool DataBase::FindFriend(int sou_id,int des_id)
 
 void DataBase::InsertFriend(int sou_id,int des_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params("insert into friend_buffer (sou_id,des_id) values($1,$2)",sou_id,des_id);
     w1.commit();
 }
 
 void DataBase::DeleteFriend(int sou_id,int des_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params
     (
         "delete from friend_buffer where (sou_id=$1 and des_id=$2) or (sou_id=$3 and des_id=$4)",
@@ -380,7 +391,7 @@ void DataBase::DeleteFriend(int sou_id,int des_id)
 
 void DataBase::InsertUnicastMsg(unicast_msg* um1)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec("select localtimestamp(0)");
     strcpy(um1->times,r1[0][0].as<const char*>());
 
@@ -398,7 +409,7 @@ void DataBase::InsertUnicastMsg(unicast_msg* um1)
 
 void DataBase::InsertMulticastMsg(multicast_msg* mm1)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec("select localtimestamp(0)");
     strcpy(mm1->times,r1[0][0].as<const char*>());
 
@@ -413,7 +424,7 @@ void DataBase::InsertMulticastMsg(multicast_msg* mm1)
 
 bool DataBase::FindGroup(const char* admin,group_info* gi1)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from group_info where admin=$1",admin);
     if(!r1.empty())
     {
@@ -431,7 +442,7 @@ bool DataBase::FindGroup(const char* admin,group_info* gi1)
 
 void DataBase::InsertGroup(group_info& gi1)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select max(id) from group_info");
     
     int id=1;
@@ -451,14 +462,14 @@ void DataBase::InsertGroup(group_info& gi1)
 
 int DataBase::CountGroupNums(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select count(id) from group_info where manager_id=$1",id);
     return r1[0][0].as<int>();
 }
 
 bool DataBase::FindGroupMember(int sou_id,int group_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from group_buffer where member_id=$1 and group_id=$2",
@@ -472,7 +483,7 @@ bool DataBase::FindGroupMember(int sou_id,int group_id)
 
 void DataBase::RemoveGroupMember(int sou_id,int group_id,int manager_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "delete from group_buffer where member_id=$1 and group_id=$2 and manager_id =$3",
@@ -483,7 +494,7 @@ void DataBase::RemoveGroupMember(int sou_id,int group_id,int manager_id)
 
 int DataBase::FindGroupMemberNum(int group_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select * from group_buffer where group_id=$1",group_id
@@ -493,7 +504,7 @@ int DataBase::FindGroupMemberNum(int group_id)
 
 void DataBase::GetGroupMemberID(int* ptr,int group_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params
     (
         "select member_id from group_buffer where group_id=$1",group_id
@@ -508,7 +519,7 @@ void DataBase::GetGroupMemberID(int* ptr,int group_id)
 
 void DataBase::View_All_Users()
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from user_info");
 
     std::cout
@@ -531,7 +542,7 @@ void DataBase::View_All_Users()
 
 bool DataBase::IsBlackUser(const char* admin)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select id from user_info where admin=$1",admin);
     pqxx::result r2=w1.exec_params("select * from black_user_info where id=$1",r1[0]["id"].as<int>());
 
@@ -542,7 +553,7 @@ bool DataBase::IsBlackUser(const char* admin)
 
 bool DataBase::InsertBlackList(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params("insert into black_user_info (id) values($1)",id);
     w1.commit();
     return true;
@@ -550,7 +561,7 @@ bool DataBase::InsertBlackList(int id)
 
 bool DataBase::RemoveBlackList(int id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params("delete from black_user_info where id=$1",id);
     w1.commit();
     return true;
@@ -558,7 +569,7 @@ bool DataBase::RemoveBlackList(int id)
 
 void DataBase::ViewBlackList()
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec("select * from black_user_info");
 
     std::cout<<"ID"<<std::endl;
@@ -571,7 +582,7 @@ void DataBase::ViewBlackList()
 
 void DataBase::ViewActiveLog()
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from active_log");
 
     std::cout
@@ -598,14 +609,14 @@ void DataBase::ViewActiveLog()
 
 void DataBase::ClearActiveLog()
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params("delete from active_log");
     w1.commit();
 }
 
 bool DataBase::DeleteOneActiveLog(int act_id)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     pqxx::result r1=w1.exec_params("select * from active_log where id=$1",act_id);
 
     if(r1.size()==0)
@@ -620,12 +631,16 @@ bool DataBase::DeleteOneActiveLog(int act_id)
 
 void DataBase::UpdatePasswd(int id,const char* passwd)
 {
-    pqxx::work w1(c1);
+    pqxx::work w1(*c1);
     w1.exec_params("update user_info set password=$1 where id=$2",passwd,id);
     w1.commit();
 }
 
 DataBase::~DataBase()
 {
-    ;
+    if(this->c1!=NULL)
+    {   
+        delete this->c1;
+        this->c1=NULL;
+    }
 }

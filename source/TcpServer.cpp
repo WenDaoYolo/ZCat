@@ -20,7 +20,7 @@ void TcpServer::DisableNagle(int fd)
 }
 
 TcpServer::TcpServer(int port,int listen_len):
-    stop(false),user_db(DEF_STR),
+    stop(false),user_db(),
     user_info_pool(sizeof(user_info)),
     group_info_pool(sizeof(group_info)),
     ug_info_pool(sizeof(ug_info)),
@@ -1172,6 +1172,20 @@ void TcpServer::StartUp()
 void TcpServer::AdminPanel()
 {
     char buffer[1024];
+    
+    std::fstream f1;
+    char db_info[128]={0};
+    f1.open("./SERVER_CONFIG.txt",std::ios::in);
+    
+    if(f1.is_open())
+    {
+        f1.getline(db_info,128,'\n');
+        f1.close();
+    }
+    else
+    {
+        strcpy(db_info,"error");
+    }
 
     std::cout<<"loading..."<<std::endl;
     sleep(2);//wait for main thread function
@@ -1354,7 +1368,7 @@ void TcpServer::AdminPanel()
             <<" port="<<ntohs(this->my_sa.sin_port)<<std::endl<<std::endl;
 
             std::cout<<"[Data Base]"<<std::endl;
-            std::cout<<DEF_STR<<std::endl<<std::endl;
+            std::cout<<db_info<<std::endl<<std::endl;
 	    }
 
         if(!strcmp(buffer,"dissinfo"))

@@ -3,16 +3,15 @@
 #include<iostream>
 #include<cstring>
 #include<iomanip>
+#include<fstream>
 #pragma once
-#define DEF_STR "user=postgres password=WdXdRr&424764 host=localhost port=4399 dbname=userdb"
-
 
 class DataBase
 {
     private:
-        pqxx::connection c1;
+        pqxx::connection* c1;
     public:
-        DataBase(const std::string& connect_str);
+        DataBase();
         bool FindUser(const std::string& admin,user_info* u_info);
         void InsertUser(const char* admin,const char* passwd,const char* name);
         void InsertLog(const char* ip,const char* admin,const char* active);
