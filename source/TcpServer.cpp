@@ -1175,7 +1175,7 @@ void TcpServer::AdminPanel()
     
     std::fstream f1;
     char db_info[128]={0};
-    f1.open("./SERVER_CONFIG.txt",std::ios::in);
+    f1.open("./CONFIG.txt",std::ios::in);
     
     if(f1.is_open())
     {
