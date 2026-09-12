@@ -1,0 +1,5 @@
+172.20.10.2
+1026
+
+#line 1 is server ip
+#line 2 is server port
