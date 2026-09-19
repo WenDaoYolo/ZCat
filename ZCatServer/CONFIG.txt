@@ -1,4 +1,4 @@
-user=postgres password=WdXdRr&424764 host=localhost port=4399 dbname=userdb
+user=xxx password=xxx host=xxx port=xxx dbname=xxx
 1026
 
 #line 1 database_info
