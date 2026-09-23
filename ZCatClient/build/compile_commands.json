@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/build",
+  "command": "C:\\TDM-GCC-64\\bin\\c++.exe  @CMakeFiles\\ZCatClient.dir\\includes_CXX.rsp -g -o CMakeFiles\\ZCatClient.dir\\source\\source\\GraphicOutput.cpp.obj -c C:\\Users\\35474\\Desktop\\GitRepos\\ZCat\\ZCatClient\\source\\source\\GraphicOutput.cpp",
+  "file": "C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/source/source/GraphicOutput.cpp",
+  "output": "CMakeFiles/ZCatClient.dir/source/source/GraphicOutput.cpp.obj"
+},
+{
+  "directory": "C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/build",
+  "command": "C:\\TDM-GCC-64\\bin\\c++.exe  @CMakeFiles\\ZCatClient.dir\\includes_CXX.rsp -g -o CMakeFiles\\ZCatClient.dir\\source\\source\\TcpClient.cpp.obj -c C:\\Users\\35474\\Desktop\\GitRepos\\ZCat\\ZCatClient\\source\\source\\TcpClient.cpp",
+  "file": "C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/source/source/TcpClient.cpp",
+  "output": "CMakeFiles/ZCatClient.dir/source/source/TcpClient.cpp.obj"
+},
+{
+  "directory": "C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/build",
+  "command": "C:\\TDM-GCC-64\\bin\\c++.exe  @CMakeFiles\\ZCatClient.dir\\includes_CXX.rsp -g -o CMakeFiles\\ZCatClient.dir\\source\\source\\main.cpp.obj -c C:\\Users\\35474\\Desktop\\GitRepos\\ZCat\\ZCatClient\\source\\source\\main.cpp",
+  "file": "C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/source/source/main.cpp",
+  "output": "CMakeFiles/ZCatClient.dir/source/source/main.cpp.obj"
+}
+]

@@ -1,0 +1,3 @@
+C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/build/CMakeFiles/ZCatClient.dir
+C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/build/CMakeFiles/edit_cache.dir
+C:/Users/35474/Desktop/GitRepos/ZCat/ZCatClient/build/CMakeFiles/rebuild_cache.dir
